@@ -1,0 +1,7 @@
+{
+  "name": "lucky-pick",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
