@@ -17,6 +17,10 @@ package-lock.json
 # production - vite
 /dist 
 
+# platforms
+/android
+/ios
+
 # misc
 .DS_Store
 .env.local
