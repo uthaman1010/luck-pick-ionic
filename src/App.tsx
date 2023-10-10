@@ -27,7 +27,7 @@ import Register from './pages/Register';
 setupIonicReact();
 
 const App: React.FC = () => (
-  <IonApp>
+  <IonApp style={{ 'background': '#fff' }} >
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/">
