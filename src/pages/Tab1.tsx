@@ -1,7 +1,7 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 
-const List: React.FC = () => {
+const Tab1: React.FC = () => {
 
     return (
         <IonPage>
@@ -10,7 +10,7 @@ const List: React.FC = () => {
                     <IonButtons slot='start'>
                         <IonMenuButton />
                     </IonButtons>
-                    <IonTitle className='ion-text-center'>List</IonTitle>
+                    <IonTitle>Tab 1</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
@@ -20,4 +20,4 @@ const List: React.FC = () => {
     );
 };
 
-export default List;
+export default Tab1;
