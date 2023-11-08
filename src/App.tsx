@@ -21,6 +21,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+// import './theme/custom.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Menu from './pages/Menu';
