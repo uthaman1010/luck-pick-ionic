@@ -1,13 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonChip, IonContent, IonHeader, IonIcon, IonImg, IonItem, IonLabel, IonMenuButton, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
-import { trashBinOutline } from 'ionicons/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    IonAvatar, IonButton, IonButtons, IonCard, IonCardContent, IonChip,
+    IonContent, IonDatetime, IonFab, IonFabButton, IonHeader, IonIcon, IonImg,
+    IonItem, IonLabel, IonMenuButton, IonModal, IonPage, IonRefresher, IonRefresherContent, IonSearchbar, IonSegment, IonSegmentButton, IonSkeletonText,
+    IonTitle, IonToolbar, useIonAlert, useIonToast, useIonViewWillEnter
+} from '@ionic/react';
+import { addOutline, trashBinOutline } from 'ionicons/icons';
+import '../css/List.css'
 
 const List: React.FC = () => {
 
+    const [presentingElemant, setPresentingElemant] = useState<HTMLElement | null>(null)
+    const [activeSegment, setActiveSegment] = useState<any>('details')
+    const [selectedUser, setSelectedUser] = useState<any>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [users, setUsers] = useState<any[]>([])
+
+    const cardModal = useRef<HTMLIonModalElement>(null)
+    const modal = useRef<HTMLIonModalElement>(null)
+    const page = useRef(null)
+
     const [showAlert] = useIonAlert()
     const [ShowToast] = useIonToast()
+
+    useEffect(() => {
+        setPresentingElemant(page.current)
+    }, [])
 
     useIonViewWillEnter(async () => {
         const users = await getUsers()
@@ -38,18 +56,17 @@ const List: React.FC = () => {
                 }
             ]
         })
-
     }
 
     const doRefresh = async (event: any) => {
-        console.log({ event });
+        // console.log({ event });
         const data = await getUsers()
         setUsers(data.results)
         event.detail.complete()
     }
 
     return (
-        <IonPage>
+        <IonPage ref={page} >
             <IonHeader>
                 <IonToolbar color={'success'}>
                     <IonButtons slot='start'>
@@ -88,7 +105,7 @@ const List: React.FC = () => {
                         </IonCard>
                     ))}
                 {users.map((user, index) => (
-                    <IonCard key={index}>
+                    <IonCard key={index} onClick={() => setSelectedUser(user)}>
                         <IonCardContent className='ion-no-padding' >
                             <IonItem style={{ borderStyle: 'none !important' }} lines='none' >
                                 <IonAvatar slot='start'>
@@ -103,7 +120,61 @@ const List: React.FC = () => {
                         </IonCardContent>
                     </IonCard>
                 ))}
+                <IonModal breakpoints={[0, 0.25, 0.75, 0.8]} initialBreakpoint={0.75} ref={modal} isOpen={selectedUser !== null} onIonModalDidDismiss={() => setSelectedUser(null)} >
+                    <IonHeader>
+                        <IonToolbar color={'light'}>
+                            <IonButtons slot='start'>
+                                <IonButton onClick={() => modal.current?.dismiss()}>Close</IonButton>
+                            </IonButtons>
+                            <IonTitle>{selectedUser?.name?.first} {selectedUser?.name?.last}</IonTitle>
+                        </IonToolbar>
+                        <IonToolbar color={'light'}>
+                            <IonSegment value={activeSegment} onIonChange={(e) => setActiveSegment(e.detail.value!)}>
+                                <IonSegmentButton value='details'>Details</IonSegmentButton>
+                                <IonSegmentButton value='calendar'>Calendar</IonSegmentButton>
+                            </IonSegment>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent className='ion-padding'>
+                        {activeSegment === 'details' && (
+                            <IonCard>
+                                <IonCardContent className='ion-no-padding'>
+                                    <IonItem lines='none'>
+                                        <IonAvatar slot='start'>
+                                            <IonImg src={selectedUser?.picture?.thumbnail} />
+                                        </IonAvatar>
+                                        <IonLabel class='ion-text-wrap'>
+                                            {selectedUser?.name?.first} {selectedUser?.name?.last}
+                                            <p>{selectedUser?.email}</p>
+                                        </IonLabel>
+                                    </IonItem>
+                                </IonCardContent>
+                            </IonCard>
+                        )}
+                        {activeSegment === 'calendar' && <IonDatetime />}
+                    </IonContent>
+                </IonModal>
             </IonContent>
+
+            <IonModal ref={cardModal} trigger='card-modal' presentingElement={presentingElemant!} >
+                <IonHeader>
+                    <IonToolbar color={'success'}>
+                        <IonButtons slot='start'>
+                            <IonButton onClick={() => cardModal.current?.dismiss()}>Close</IonButton>
+                        </IonButtons>
+                        <IonTitle>Card Modal</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                    SHEET
+                </IonContent>
+            </IonModal>
+
+            <IonFab vertical='bottom' horizontal='end' slot='fixed'>
+                <IonFabButton id='card-modal' color={'tertiary'} >
+                    <IonIcon icon={addOutline} />
+                </IonFabButton>
+            </IonFab>
         </IonPage>
     );
 };
