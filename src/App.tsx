@@ -21,11 +21,14 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+// import './theme/custom.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Menu from './pages/Menu';
 
-setupIonicReact();
+setupIonicReact({
+  // mode: 'ios'
+});
 
 const App: React.FC = () => (
   <IonApp style={{ 'background': '#fff' }} >
@@ -35,7 +38,7 @@ const App: React.FC = () => (
           <Login />
         </Route>
         <Route component={Register} path="/register" exact />
-        <Route component={Menu} path="/menu" exact />
+        <Route component={Menu} path="/menu" />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
